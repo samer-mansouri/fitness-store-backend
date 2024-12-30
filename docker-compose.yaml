@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db_angular_project:
+    image: mysql:8.0
+    container_name: db_angular_project
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Root password
+      MYSQL_DATABASE: mydatabase        # Name of your database
+      MYSQL_USER: myuser                # Username
+      MYSQL_PASSWORD: mypassword        # Password
+    ports:
+      - "3317:3306"
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      - django_network
+
+  adminer_db_angular_project:
+    image: adminer:latest
+    container_name: adminer_db_angular_project
+    restart: always
+    ports:
+      - "8080:8080"  # Adminer will be accessible on http://localhost:8080
+    environment:
+      ADMINER_DESIGN: naeve # Use a clean and modern theme for Adminer
+    networks:
+      - django_network
+
+networks:
+  django_network:
+    driver: bridge
+
+volumes:
+  db_data:

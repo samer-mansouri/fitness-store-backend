@@ -1,0 +1,75 @@
+# Byte-compiled files
+*.pyc
+*.pyo
+__pycache__/
+*.pyd
+
+# Django specific
+db.sqlite3
+*.log
+*.pot
+*.py[cod]
+*.sqlite3
+*.env
+*.secret
+
+# Environment Variables
+.env
+env/
+db_data/
+
+# Media/Static files
+/staticfiles/
+/media/
+
+# Node modules (if using npm/yarn for frontend)
+node_modules/
+
+# Local virtual environment
+venv/
+.env/
+
+# VSCode settings
+.vscode/
+
+# macOS files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+
+# Pytest cache
+.pytest_cache/
+
+# Migrations
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# IDE settings
+.idea/
+*.iml
+
+# Coverage reports
+htmlcov/
+.coverage
+*.cover
+.hypothesis/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# MySQL files
+*.sql
+
+# Backup files
+*.bak
+*.swp
+*.swo
+
+# Docker specific files
+*.pid
+*.log
+.env.docker
+.env.production
+.env.development
