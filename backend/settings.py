@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework'
+    'rest_framework',  # Django Rest Framework
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +81,7 @@ DATABASES = {
         'NAME': 'mydatabase',       # Same as MYSQL_DATABASE in docker-compose.yml
         'USER': 'myuser',           # Same as MYSQL_USER
         'PASSWORD': 'mypassword',   # Same as MYSQL_PASSWORD
-        'HOST': 'db',               # Service name in docker-compose.yml
+        'HOST': '127.0.0.1',               # Service name in docker-compose.yml
         'PORT': '3317',             # MySQL default port
     }
 }
@@ -88,12 +89,13 @@ DATABASES = {
 # settings.py
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
