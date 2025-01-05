@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',  # Django Rest Framework
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'users',           # Custom User Model
+    'users',           # Custom User Model,
+    'blog',            # Blog App
 ]
 
 MIDDLEWARE = [
