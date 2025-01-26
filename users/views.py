@@ -32,7 +32,10 @@ class UserRegisterView(CreateAPIView):
 class UserLoginView(APIView):
     permission_classes = [AllowAny]
     
+   
+    
     def post(self, request):
+      
         serializer = TokenPairSerializer(data=request.data)
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
