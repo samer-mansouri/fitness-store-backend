@@ -18,7 +18,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'comments_count', 'likes_count', 'images', 'user']
+        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'comments_count', 'likes_count', 'images', 'user', 'status']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
 class SinglePostSerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class SinglePostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'comments', 'likes', 'images', 'user']
+        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'comments', 'likes', 'images', 'user', 'status']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def get_comments(self, obj):
