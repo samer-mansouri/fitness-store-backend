@@ -33,8 +33,11 @@ class PostCreateView(generics.CreateAPIView):
 
 class PostListView(generics.ListAPIView):
     serializer_class = PostSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+    ## allow unauthenticated users to view posts
+    authentication_classes = []
+    permission_classes = []
     queryset = Post.objects.prefetch_related('comments', 'likes', 'images')
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'content']
@@ -44,8 +47,11 @@ class PostListView(generics.ListAPIView):
 
 class PostDetailView(generics.RetrieveAPIView):
     serializer_class = PostSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+    ## allow unauthenticated users to view posts
+    authentication_classes = []
+    permission_classes = []
     queryset = Post.objects.select_related().prefetch_related('comments', 'likes', 'images')
 
 
