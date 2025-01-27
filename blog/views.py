@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import PostSerializer, CommentSerializer, LikeSerializer, PostImageSerializer
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer, PostImageSerializer, SinglePostSerializer
 from rest_framework import generics
 from .models import Post, Comment, Like, PostImage
 from rest_framework.permissions import IsAuthenticated
@@ -46,7 +46,7 @@ class PostListView(generics.ListAPIView):
 
 
 class PostDetailView(generics.RetrieveAPIView):
-    serializer_class = PostSerializer
+    serializer_class = SinglePostSerializer
     # authentication_classes = [JWTAuthentication]
     # permission_classes = [IsAuthenticated]
     ## allow unauthenticated users to view posts

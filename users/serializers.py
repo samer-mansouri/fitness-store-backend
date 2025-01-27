@@ -26,9 +26,15 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
-        
     
 
+class PartialUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name']
+        read_only_fields = ['id', 'created_at']
+        
+    
 class TokenPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
