@@ -25,10 +25,11 @@ class SinglePostSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
     images = PostImageSerializer(many=True, read_only=True)
+    user = PartialUserSerializer(read_only=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'comments', 'likes', 'images']
+        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'comments', 'likes', 'images', 'user']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def get_comments(self, obj):
@@ -40,6 +41,7 @@ class SinglePostSerializer(serializers.ModelSerializer):
         return LikeSerializer(likes, many=True).data
     
 class CommentSerializer(serializers.ModelSerializer):
+    user = PartialUserSerializer(read_only=True)
     class Meta:
         model = Comment
         fields = ['id', 'post', 'user', 'content', 'created_at', 'updated_at']
