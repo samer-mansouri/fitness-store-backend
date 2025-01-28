@@ -5,7 +5,7 @@ class Post(models.Model):
 
     ##post status choices
     choices = (
-        ('published', 'published'),
+        ('approved', 'approved'),
         ('pending', 'pending'),
         ('rejected', 'rejected')
     )

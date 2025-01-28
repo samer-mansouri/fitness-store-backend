@@ -11,6 +11,9 @@ from .views import (
     CommentDeleteView,
     LikeToggleView,
     LikePostListView,
+    ChangePostStatusView,
+
+    PostListAdminView,
 )
 
 app_name = 'blog'
@@ -29,4 +32,9 @@ urlpatterns = [
 
     path('likes/toggle/', LikeToggleView.as_view(), name='like-toggle'),  # Toggle like for a post
     path('posts/<int:pk>/likes/', LikePostListView.as_view(), name='post-like-list'),  # List all likes for a specific post
+
+
+    ##admin views
+    path('admin/posts/<int:pk>/status/', ChangePostStatusView.as_view(), name='post-status'),  # Change post status
+    path('admin/posts/', PostListAdminView.as_view(), name='post-list-admin'),  # List all posts for admin
 ]

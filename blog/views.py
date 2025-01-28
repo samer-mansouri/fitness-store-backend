@@ -13,6 +13,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
 from rest_framework.exceptions import APIException
+from users.permissions import IsAdmin
 
 class PostCreateView(generics.CreateAPIView):
     serializer_class = PostSerializer
@@ -38,10 +39,11 @@ class PostListView(generics.ListAPIView):
     ## allow unauthenticated users to view posts
     authentication_classes = []
     permission_classes = []
-    queryset = Post.objects.prefetch_related('comments', 'likes', 'images')
+    queryset = Post.objects.filter(status='approved').prefetch_related('comments', 'likes', 'images')
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'content']
     ordering_fields = ['created_at', 'updated_at']
+    
     pagination_class = PageNumberPagination
 
 
@@ -165,3 +167,31 @@ class LikePostListView(generics.ListAPIView):
             return Like.objects.filter(post_id=post_id).select_related('user')
         except Exception as e:
             raise APIException(f"Error retrieving likes: {e}")
+
+class ChangePostStatusView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdmin]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            post = Post.objects.get(id=self.kwargs.get('pk'))
+        except Post.DoesNotExist:
+            raise NotFound('Post not found')
+
+        try:
+            post.status = request.data['status']
+            post.save()
+            data = PostSerializer(post).data
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            raise APIException(f"Error changing post status: {e}")
+        
+class PostListAdminView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdmin]
+    queryset = Post.objects.prefetch_related('comments', 'likes', 'images')
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'content']
+    ordering_fields = ['created_at', 'updated_at']
+    pagination_class = PageNumberPagination
