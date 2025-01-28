@@ -14,6 +14,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
 from rest_framework.exceptions import APIException
 from users.permissions import IsAdmin
+from users.models import User
+from product.models import Product
 
 class PostCreateView(generics.CreateAPIView):
     serializer_class = PostSerializer
@@ -195,3 +197,33 @@ class PostListAdminView(generics.ListAPIView):
     search_fields = ['title', 'content']
     ordering_fields = ['created_at', 'updated_at']
     pagination_class = PageNumberPagination
+
+
+# Create your views here.
+class AdminCountView(APIView):
+    def get(self, request):
+        posts = Post.objects.count()
+        pending_posts = Post.objects.filter(status='pending').count()
+        approved_posts = Post.objects.filter(status='approved').count()
+        rejected_posts = Post.objects.filter(status='rejected').count()
+
+        products = Product.objects.count()
+
+        users = User.objects.count()
+        ##admin users
+        admins = User.objects.filter(is_admin=True).count()
+        ##normal users
+        normal_users = User.objects.filter(is_admin=False).count()
+
+        data = {
+            'posts': posts,
+            'pending_posts': pending_posts,
+            'approved_posts': approved_posts,
+            'rejected_posts': rejected_posts,
+            'products': products,
+            'users': users,
+            'admins': admins,
+            'normal_users': normal_users
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
