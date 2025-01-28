@@ -14,6 +14,7 @@ from .views import (
     ChangePostStatusView,
 
     PostListAdminView,
+    AdminCountView,
 )
 
 app_name = 'blog'
@@ -37,4 +38,5 @@ urlpatterns = [
     ##admin views
     path('admin/posts/<int:pk>/status/', ChangePostStatusView.as_view(), name='post-status'),  # Change post status
     path('admin/posts/', PostListAdminView.as_view(), name='post-list-admin'),  # List all posts for admin
+    path('admin/count/', AdminCountView.as_view(), name='admin-count'),  # Count posts, comments, likes
 ]
