@@ -67,7 +67,7 @@ class CreateCheckoutSessionView(APIView):
                 payment_method_types=['card'],
                 line_items=line_items,
                 mode='payment',
-                success_url=f"{frontend_url}/payment-success/",
+                success_url=f"{frontend_url}/payment-success/?session_id={{CHECKOUT_SESSION_ID}}",
                 cancel_url=f"{frontend_url}/cart/",
             )
 
@@ -78,6 +78,36 @@ class CreateCheckoutSessionView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CheckoutSpecificOrderView(APIView):
+    permission_classes = [permissions.IsAuthenticated]  # Require authentication
+
+    def post(self, request):
+        order_id = request.data.get("order_id")
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+
+        line_items = []
+        for item in order.items.all():
+            line_items.append({
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {'name': item.product.name},
+                    'unit_amount': int(item.product.price * 100),
+                },
+                'quantity': item.quantity,
+            })
+
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=line_items,
+            mode='payment',
+            success_url=f"{frontend_url}/payment-success/?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{frontend_url}/cart/",
+        )
+
+        order.stripe_session_id = checkout_session.id
+        order.save()
+
+        return Response({"sessionId": checkout_session.id}, status=status.HTTP_201_CREATED)
 
 class PaymentSuccessView(APIView):
     permission_classes = [permissions.IsAuthenticated]  # Require authentication
@@ -89,10 +119,9 @@ class PaymentSuccessView(APIView):
         order.save()
         return Response({"message": "Payment successful"}, status=status.HTTP_200_OK)
     
-class UserOrdersView(APIView):
+class UserOrdersView(ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = OrderSerializer
 
-    def get(self, request):
-        orders = Order.objects.filter(user=request.user)
-        serializer = OrderSerializer(orders, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
