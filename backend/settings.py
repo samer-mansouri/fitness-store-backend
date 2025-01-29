@@ -23,7 +23,7 @@ environ.Env.read_env(BASE_DIR / '.env')
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
 FRONTEND_URL = env('FRONTEND_URL')
-
+GEMINI_API_KEY = env('GEMINI_API_KEY')
 
 
 # Quick-start development settings - unsuitable for production
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'users',           # Custom User Model,
     'blog',            # Blog App   c
     'product',        
+    'chatbot',         # Chatbot App
 ]
 
 MIDDLEWARE = [
