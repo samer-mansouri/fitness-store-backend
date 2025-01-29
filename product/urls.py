@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import ProductListView, ProductCreateView, ProductDetailView, ProductUpdateView, ProductDeleteView
+from .views import ProductListView, ProductCreateView, ProductDetailView, ProductUpdateView, ProductDeleteView, CreateCheckoutSessionView, PaymentSuccessView, UserOrdersView
 
 app_name = 'product'
 urlpatterns = [
@@ -9,6 +9,7 @@ urlpatterns = [
     path('<int:pk>/', ProductDetailView.as_view(), name='product-detail'),  
     path('<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),  
     path('<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),  
-
-  
+    path('create-checkout-session/', CreateCheckoutSessionView.as_view(), name='create_checkout_session'),
+    path('payment-success/', PaymentSuccessView.as_view(), name='payment_success'),
+    path('user-orders/', UserOrdersView.as_view(), name='user_orders'),  # New endpoint to get user orders
 ]
