@@ -8,12 +8,17 @@ from rest_framework import status, permissions
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 frontend_url = settings.FRONTEND_URL
 
+class ProductListPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 # List Products
 class ProductListView(ListAPIView):
@@ -40,6 +45,15 @@ class ProductUpdateView(UpdateAPIView):
 class ProductDeleteView(DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+class PaginatedAndSearchProductListView(ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['name', 'description']
+    ordering_fields = ['created_at', 'updated_at']
+    pagination_class = ProductListPagination
 
 
 class CreateCheckoutSessionView(APIView):

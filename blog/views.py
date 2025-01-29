@@ -16,6 +16,13 @@ from rest_framework.exceptions import APIException
 from users.permissions import IsAdmin
 from users.models import User
 from product.models import Product
+from rest_framework.pagination import PageNumberPagination
+
+class PostListPagination(PageNumberPagination):
+    page_size = 10 
+    page_size_query_param = 'page_size'
+    max_page_size = 100 
+
 
 class PostCreateView(generics.CreateAPIView):
     serializer_class = PostSerializer
@@ -45,8 +52,19 @@ class PostListView(generics.ListAPIView):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'content']
     ordering_fields = ['created_at', 'updated_at']
-    
-    pagination_class = PageNumberPagination
+
+class PaginatedAndSearchPostListView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+    ## allow unauthenticated users to view posts
+    authentication_classes = []
+    permission_classes = []
+    queryset = Post.objects.filter(status='approved').prefetch_related('comments', 'likes', 'images')
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'content']
+    ordering_fields = ['created_at', 'updated_at']
+    pagination_class = PostListPagination
 
 
 class PostDetailView(generics.RetrieveAPIView):

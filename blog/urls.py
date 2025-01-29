@@ -15,6 +15,7 @@ from .views import (
 
     PostListAdminView,
     AdminCountView,
+    PaginatedAndSearchPostListView,
 )
 
 app_name = 'blog'
@@ -33,7 +34,7 @@ urlpatterns = [
 
     path('likes/toggle/', LikeToggleView.as_view(), name='like-toggle'),  # Toggle like for a post
     path('posts/<int:pk>/likes/', LikePostListView.as_view(), name='post-like-list'),  # List all likes for a specific post
-
+    path('paginated-search/', PaginatedAndSearchPostListView.as_view(), name='paginated_search'),  # New endpoint to search and paginate posts
 
     ##admin views
     path('admin/posts/<int:pk>/status/', ChangePostStatusView.as_view(), name='post-status'),  # Change post status
